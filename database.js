@@ -1,21 +1,38 @@
 import pg from "pg"
 import * as dotenv from 'dotenv'
 dotenv.config()
-console.log(process.env)
 
-const {PGHOST,
-PGUSER,
-PGDATABASE,
-PGPASSWORD,
-PGPORT,
-} =  process.env
+let db;
 
-export default function connectToDB() {
-    return new pg.Pool({
-        host: PGHOST,
-        user: PGUSER,
-        database: PGDATABASE,
-        password: PGPASSWORD,
-        port: PGPORT,
-      })
+const {PGHOST, PGUSER, PGDATABASE, PGPASSWORD} =  process.env
+
+function connectToDB() {
+    return new Promise(function(resolve, reject){
+      try {
+        db = new pg.Pool({
+          host: PGHOST,
+          user: PGUSER,
+          database: PGDATABASE,
+          password: PGPASSWORD,
+        })
+        
+        db.connect((err, client, release) => {
+          if (err) {
+            reject(err)
+          }
+          client.query('SELECT NOW()', (err, result) => {
+            release()
+            if (err) {
+              reject(err)
+            }
+            console.log(result.rows)
+            resolve()
+          })
+        })
+    } catch (error) {
+      reject(error)
+    }
+    })
 }
+
+export { connectToDB, db }

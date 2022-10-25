@@ -1,21 +1,42 @@
 import express from "express"
+import {db} from "../database.js"
+import fs from "fs"
+
+
+// let res = fs.readFileSync("./package.json", "utf8")
+// console.log(res)
 
 const subRouter = express.Router()
 
 subRouter
     .route("/")
     .get((req, res) => {
-        res.send("get route working")
+        db.query('SELECT * FROM users ORDER BY id ASC', (error, results) => {
+            if(error) {
+                res.send(error)
+            }
+            res.json(results.rows)
+        })
     })
     .post((req, res) => {
-        res.send("post route working")
+        console.log(req.body)
+        res.send("POST WORKED")
     })
+
+// document.querySelector("button").addEventListener("click", (event)=> {
+//     console.log("button clicked!")
+// })
 
 subRouter
     .route("/:id")
     .get((req, res) => {
-        console.log("users id we are here")
-        res.send("get HERE :id route working, got id:" + req.params.id)
+        const {id} = req.params
+        db.query('SELECT * FROM users WHERE id=$1 ORDER BY id ASC', [id], (error, results) => {
+            if(error) {
+                res.send(error)
+            }
+            res.json(results.rows)
+        })
     })
     .put((req, res) => {
         res.send("put :id route working, got id:" + req.params.id)

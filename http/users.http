@@ -1,0 +1,15 @@
+GET http://localhost:8080/users
+
+###
+GET http://localhost:8080/users/12321
+
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+    "email":"bob@gmail.com,",
+    "password":"12912hduh.",
+    "username":"bob5000"
+}
+
