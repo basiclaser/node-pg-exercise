@@ -2,7 +2,6 @@ import express from "express"
 import {db} from "../database.js"
 import fs from "fs"
 
-
 // let res = fs.readFileSync("./package.json", "utf8")
 // console.log(res)
 
@@ -19,13 +18,17 @@ subRouter
         })
     })
     .post((req, res) => {
-        console.log(req.body)
-        res.send("POST WORKED")
+        const {first_name, last_name, age} = req.body
+        db.query(`
+            INSERT INTO users (first_name, last_name, age)
+            VALUES ($1, $2, $3);
+        `, [first_name, last_name, age], (error, results) => {
+            if(error) {
+                res.send(error)
+            }
+            res.json(results.rows)
+        })
     })
-
-// document.querySelector("button").addEventListener("click", (event)=> {
-//     console.log("button clicked!")
-// })
 
 subRouter
     .route("/:id")
