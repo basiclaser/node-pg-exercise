@@ -1,14 +1,14 @@
 GET http://localhost:8080/users
 
 ###
-GET http://localhost:8080/users/12321
+GET http://localhost:8080/users/13
 
 ###
 POST http://localhost:8080/users
 Content-Type: application/json
 
 {
-    "first_name":"bob",
+    "first_name":"blabablal",
     "last_name":"last naem",
     "age":1123971
 }
