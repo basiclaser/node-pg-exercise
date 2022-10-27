@@ -5,9 +5,15 @@ import fs from "fs"
 // let res = fs.readFileSync("./package.json", "utf8")
 // console.log(res)
 
-const subRouter = express.Router()
+const usersRouter = express.Router()
 
-subRouter
+usersRouter.use((req,res,next) => {
+    console.log("req recieved on users subrouter")
+    const randomError = new Error("uhhhh something went wrong")
+    next(randomError)
+})
+
+usersRouter
     .route("/")
     .get((req, res) => {
         db.query('SELECT * FROM users ORDER BY id ASC', (error, results) => {
@@ -30,7 +36,7 @@ subRouter
         })
     })
 
-subRouter
+usersRouter
     .route("/:id")
     .get((req, res) => {
         const {id} = req.params
@@ -48,4 +54,4 @@ subRouter
         res.send("delete :id route working, got id:" + req.params.id)
     })
 
-export default subRouter;
+export default usersRouter;
